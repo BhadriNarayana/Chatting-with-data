@@ -5,7 +5,12 @@ def main():
 
     st.header("Chat with your pdfs! :books:")
 
-    st.text_input()
+    st.text_input("Ask a question abot your documents:")
+
+    with st.sidebar:
+        st.subheader("Your documents")
+        st.file_uploader("Upload your PDFs here and click on 'Process'")
+        st.button("Process")
     
 
 
