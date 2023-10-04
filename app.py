@@ -60,17 +60,22 @@ def get_conversation_chain(vs):
     return conversational_chain
 
 def handle_userinput(user_question):
-    resp = st.session_state.conversation({'question': user_question})
-    # st.write(resp)
-    st.session_state.chat_history = resp['chat_history']
+    if user_question and st.session_state.lf:
+        resp = st.session_state.conversation({'question': user_question})
+        # st.write(resp)
+        st.session_state.chat_history = resp['chat_history']
 
 
-    for i, message in enumerate(st.session_state.chat_history):
-        if i%2==0:
-            st.write(user_template.replace("{{MSG}}", message.content), unsafe_allow_html=True)
-        
-        else:
-            st.write(bot_template.replace("{{MSG}}", message.content), unsafe_allow_html=True)
+        for i, message in enumerate(st.session_state.chat_history):
+            if i%2==0:
+                st.write(user_template.replace("{{MSG}}", message.content), unsafe_allow_html=True)
+            
+            else:
+                st.write(bot_template.replace("{{MSG}}", message.content), unsafe_allow_html=True)
+    
+    else:
+        st.write("Please load the files in the sidebar and then click on the 'Process' button to process your data and then start chatting here")    
+            
 
 def main():
     load_dotenv()
@@ -78,7 +83,8 @@ def main():
 
     st.write(css, unsafe_allow_html=True)
 
-    
+    st.session_state.lf = False
+
     if "conversation" not in st.session_state:
         st.session_state.conversation = None
 
@@ -92,7 +98,7 @@ def main():
 
     if user_question:
         handle_userinput(user_question)
-
+    
 
     st.write(user_template.replace("{{MSG}}", "Hello from user"), unsafe_allow_html=True)
     st.write(bot_template.replace("{{MSG}}", "Hello from bot"), unsafe_allow_html=True)
@@ -111,6 +117,7 @@ def main():
                 #st.write(vs)
 
                 st.session_state.conversation = get_conversation_chain(vs)
+                st.session_state.lf = True
                   
 
 
